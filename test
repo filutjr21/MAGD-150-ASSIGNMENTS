@@ -1,0 +1,285 @@
+int[][] world;
+ 
+int worldSizeX = 50;
+int worldSizeY = 50;
+ 
+ArrayList<Snake> snaken = new ArrayList<Snake>();
+ 
+ 
+void setup()
+{
+  size(500,500);
+  world = new int[worldSizeX][worldSizeY];
+  for(int i =0; i < 10; i++)
+  {
+    snaken.add(new Snake((int)random(worldSizeX), (int)random(worldSizeY)));
+  }
+}
+ 
+void draw()
+{
+  float tileSize = 10;
+   
+  for(int x = 0; x < worldSizeX; x++)
+  {
+    for(int y = 0; y < worldSizeY; y++)
+    {
+      if(world[x][y] ==1)
+      {
+        fill(255);
+      }
+      else
+      {
+        fill(0);
+      }
+       
+      rect(x*tileSize, y*tileSize, tileSize, tileSize);
+    }
+  }
+   
+  for(Snake snaak : snaken)
+  {
+    snaak.move();
+  }
+}
+ 
+class Snake
+{
+  int x, y;
+  int hdir = 0;
+  int vdir = 0;
+  boolean dead = false;
+   
+  public Snake(int ix, int iy)
+  {
+    x = ix;
+    y = iy;
+     
+    if(random(1) > 0.5)
+    {
+      if(random(1) > 0.5)
+      {
+        hdir = -1;
+      }
+      else
+      {
+        hdir = 1;
+      }
+    }
+    else
+    {
+      if(random(1) > 0.5)
+      {
+        vdir = -1;
+      }
+      else
+      {
+        vdir = 1;
+      }
+    }
+  }
+   
+  int getLeft()
+  {
+    //going left
+    if(hdir < 0)
+    {
+      if(y+1 > worldSizeY-1)
+      {
+        return 1;
+      }
+      return world[x][y+1];
+    }
+    else if(hdir > 0)
+    {
+      if(y-1 < 0)
+      {
+        return 1;
+      }
+       
+      return world[x][y-1];
+    }
+    else if(vdir > 0)
+    {
+      if(x+1 > worldSizeX)
+      {
+        return 1;
+      }
+ 
+      return world[x+1][y];
+    }
+    else if(vdir < 0)
+    {
+      if(x-1 < 0)
+      {
+        return 1;
+      }
+ 
+      return world[x-1][y];
+    }
+    return 0;
+  }
+   
+  int getRight()
+  {
+    //going left
+    if(hdir < 0)
+    {
+      if(y-1 < 0)
+      {
+        return 1;
+      }
+      return world[x][y-1];
+    }
+    else if(hdir > 0)
+    {
+      if(y+1 > worldSizeY-1)
+      {
+        return 1;
+      }
+      return world[x][y+1];
+    }
+    else if(vdir > 0)
+    {
+      if(x-1 < 0)
+      {
+        return 1;
+      }
+      return world[x-1][y];
+    }
+    else if(vdir < 0)
+    {
+      if(x+1 > worldSizeX-1)
+      {
+        return 1;
+      }
+      return world[x+1][y];
+    }
+    return 0;
+  }
+   
+  int getAhead()
+  {
+    if(x+hdir < 0 || x+hdir > worldSizeX-1 || y + vdir < 0 || y + vdir > worldSizeY-1) return 1;
+    return world[x+hdir][y+vdir];
+  }
+   
+  void goAhead()
+  {
+    x+=hdir;
+    y+=vdir;
+  }
+   
+  void turnLeft()
+  {
+    if(hdir > 0)
+    {
+      vdir = -1;
+      hdir = 0;
+    }
+    else
+    if(hdir < 0)
+    {
+      vdir = 1;
+      hdir = 0;
+    }
+    else
+    if(vdir > 0)
+    {
+      hdir = 1;
+      vdir = 0;
+    }
+    else
+    if(vdir < 0)
+    {
+      hdir = -1;
+      vdir = 0;
+    }
+  }
+   
+  void turnRight()
+  {
+    if(hdir > 0)
+    {
+      vdir = 1;
+      hdir = 0;
+    }
+    else
+    if(hdir < 0)
+    {
+      vdir = -1;
+      hdir = 0;
+    }
+    else
+    if(vdir > 0)
+    {
+      hdir = -1;
+      vdir = 0;
+    }
+    else
+    if(vdir < 0)
+    {
+      hdir = 1;
+      vdir = 0;
+    }
+  }
+   
+  void die(){
+     hdir = 0;
+     vdir = 0;
+     dead = true;
+  }
+   
+  void move()
+  {
+    if(dead) return;
+    //mark that we were here
+    world[x][y] = 1;
+    goAhead();
+     
+    if(random(100) > 69)
+    {
+      //randomly go left or right.
+      if(random(10) > 5)
+      {
+        if(getLeft() == 0)
+        {
+          //println("going left cause i feel like it.");
+          turnLeft();
+        }
+      }
+      else
+      {
+        if(getRight() == 0)
+        {
+          //println("going right cause i feel like it.");
+          turnRight();
+        }
+      }
+    }
+     
+    if(getAhead() != 0)
+    {
+      println("cannot go ahead");
+      //see if we can move left or right.
+      //right now our snake has a left bias, we will want to eliminate this later.
+      if(getLeft() == 0)
+      {
+        //println("going left");
+        turnLeft();
+      }
+      else if(getRight() == 0)
+      {
+        //println("going right");
+        turnRight();
+      }
+      else
+      {
+        println("Goodbye!");
+        //well, we're screwed.
+        die();
+      }
+    }
+     
+  }
+}
