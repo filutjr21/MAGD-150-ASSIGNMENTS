@@ -4,32 +4,6 @@
   </header>
   <h1>Your FINAL SKETCH Title</h1>
   <script type="text/processing" data-processing-target="mycanvas-final">
-  
-  class Timer {
-  float startTime;
-  float passedTime;
-
-  Timer() {
-  }
-
-  void reset() {
-    startTime = millis();
-  }
-
-  void getPassedTime() {
-    passedTime = millis() - startTime;
-  }
-
-  void display() {
-    textSize(25);
-    fill(255, 0, 0);
-    rect(1000,0,150,67);
-    fill(0,0,0);
-    text(passedTime, 1000, 40);
-    //println(passedTime);
-  }
-
-}
 
 color endColor = color(255, 0, 255);
 color floorColor = color(255, 255, 0);
@@ -142,6 +116,34 @@ void keyPressed() {
     }
   }
 }
+
+  
+  class Timer {
+  float startTime;
+  float passedTime;
+
+  Timer() {
+  }
+
+  void reset() {
+    startTime = millis();
+  }
+
+  void getPassedTime() {
+    passedTime = millis() - startTime;
+  }
+
+  void display() {
+    textSize(25);
+    fill(255, 0, 0);
+    rect(1000,0,150,67);
+    fill(0,0,0);
+    text(passedTime, 1000, 40);
+    //println(passedTime);
+  }
+
+}
+
 
 
   </script>
